@@ -47,6 +47,28 @@ describe('detective-es6', function() {
     assert(deps[0].members[1].alias === 'bar');
   });
 
+  it('works with async functions', function() {
+    var deps = detective('import foo from "foo"; async function test() {}');
+    assert(deps.length === 1);
+  });
+
+  it('works with commonjs require expression', function() {
+    var deps = detective('var a = require("foo");');
+    assert(deps.length === 1);
+    assert(deps[0].name === 'foo');
+  });
+
+  it('works with commonjs require', function() {
+    var deps = detective('require("foo");');
+    assert(deps.length === 1);
+    assert(deps[0].name === 'foo');
+  });
+
+  it('ignores dynamic requires', function() {
+    var deps = detective('require(blah);');
+    assert(deps.length === 0);
+  });
+
   it('retrieves the re-export dependencies alias of es6 modules', function() {
     var deps = detective('export {foo as Foo} from "mylib";');
     assert(deps.length === 1);
@@ -82,11 +104,6 @@ describe('detective-es6', function() {
     assert(deps.length === 1);
     assert(deps[0].name === 'foo');
     assert(deps[0].default === 'foo');
-  });
-
-  it('returns an empty list for non-es6 modules', function() {
-    var deps = detective('var foo = require("foo");');
-    assert(!deps.length);
   });
 
   it('does not throw with jsx in a module', function() {

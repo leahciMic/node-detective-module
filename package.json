@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/noyobo/node-detective-module",
   "dependencies": {
+    "babel-plugin-transform-async-functions": "^6.8.0",
     "node-source-walk": "^3.0.0"
   },
   "devDependencies": {
